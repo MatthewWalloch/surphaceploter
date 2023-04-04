@@ -15,7 +15,7 @@ def plottangle(k,l1,l2):
         ax.plot(i[0], i[1], i[2])
     plt.show()
 
-#bridge trisection mayer and zupan
+#bridge trisection mayer and zupan bruh m,an
 def plotroationbad(k,l1,l2):
     #https://www.heldermann-verlag.de/jgg/jgg01_05/jgg0404.pdf
     theta = np.linspace(0, 2*p, 100)
