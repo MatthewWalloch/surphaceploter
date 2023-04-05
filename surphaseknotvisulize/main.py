@@ -41,23 +41,26 @@ def plotroationbad(k,l1,l2):
                 check = False
         if check:
             tcheck.append(q)
-    print(trefoil(0,0))
     for i in theta:
         x = []
         y = []
         z = []
         for t in range(0, 100):
-            point =trefoil(t/100.0,i)
+            point = trefoil(t/100.0,i)
             x.append(point[0])
             y.append(point[1])
             z.append(point[2])
         ax.plot(x,y,z)
-    # for i in tcheck:
-    #     ax.plot(trefoil(i,timescale))
-    # for i in (k, l1, l2):
-    #     for j in range(0, 100):
-    #         ax.plot((np.cos(j * 2*p / 10)*i[0],i[1], i[2]))
-    #         rotate.append((np.cos(j * 2*p / 10)*i[0], i[1], i[2], np.sin(j * 2*p / 10)*i[0]))
+    for i in tcheck:
+        x = []
+        y = []
+        z = []
+        for t in range(0, 100):
+            point = trefoil(i, t / 100.0)
+            x.append(point[0])
+            y.append(point[1])
+            z.append(point[2])
+        ax.plot(x, y, z)
     plt.show()
 
 
@@ -72,13 +75,10 @@ def trefoil(t, theta):
     k0 = (np.cos(4 * p * start) * (2+np.cos(2*p*start))-4, np.sin(4 * p * start) * (2 + np.cos(6 * p * start)), np.sin(6 * p * start), 0)
     k1 = (np.cos(4 * p * stop) * (2+np.cos(2*p*stop))-4, np.sin(4 * p * stop) * (2 + np.cos(6 * p * stop)), np.sin(6 * p * stop), 0)
     if t <=start:
-        print("a")
-        return [np.cos(theta * 2*p) * 12 * k0[0]*t1, 12 * k0[1]*t1, k0[2]*12 *t1+(1-12 * t1)*-1, np.sin(theta * 2*p)* 12 * k0[0]*t1 ]
+        return [np.cos(theta * 2*p) * 12 * k0[0]*t, 12 * k0[0]*t,  k0[2]*12*t+(1-12*t)*-1, np.sin(theta * 2*p)* 12 * k0[0]*t]
     elif t >= stop:
-        print("a")
-        return [np.cos(theta * 2*p) *12 * k1[0]*t1, 12 * k1[1]*t1, k1[2]*12 *t1+(11+12 * t1)*-1, np.sin(theta * 2*p)* 12 * k1[0]*t1 ]
+        return [np.cos(theta * 2 * p) *12 * k1[0]*t, 12 * k1[1]*t, k1[2]*12 *t+(1-12 * t)*1, np.sin(theta * 2*p)* 12 * k1[0]*t ]
     else:
-
         return [np.cos(theta * 2*p) * (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 4), np.sin(4 * p * t) * (2 + np.cos(6 * p * t)),
          np.sin(6 * p * t), np.sin(theta * 2*p)* (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 4) ]
 
