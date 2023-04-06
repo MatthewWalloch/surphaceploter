@@ -65,7 +65,7 @@ def plotroationbad(k,l1,l2):
 
 
 def trefoilx(t):
-    return (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 2)
+    return (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 1)
 
 
 def trefoil(t, theta):
@@ -77,7 +77,7 @@ def trefoil(t, theta):
     if t <=start:
         return [np.cos(theta * 2*p) * 12 * k0[0]*t, 12 * k0[0]*t,  k0[2]*12*t+(1-12*t)*-1, np.sin(theta * 2*p)* 12 * k0[0]*t]
     elif t >= stop:
-        return [np.cos(theta * 2 * p) *12 * k1[0]*t, 12 * k1[1]*t, k1[2]*12 *t+(1-12 * t)*1, np.sin(theta * 2*p)* 12 * k1[0]*t ]
+        return [np.cos(theta * 2 * p) *12 * k1[0]*(t-stop), 12 * k1[1]*(t-stop), k1[2]*12 *(t-stop)+(1-12 * t)*1, np.sin(theta * 2*p)* 12 * k1[0]*(t-stop) ]
     else:
         return [np.cos(theta * 2*p) * (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 4), np.sin(4 * p * t) * (2 + np.cos(6 * p * t)),
          np.sin(6 * p * t), np.sin(theta * 2*p)* (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 4) ]
