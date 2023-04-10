@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import fsolve
 from sympy import cos, sin, solve, Symbol, Interval, solveset
-
+#need to have sin(sin-1(w0/kx)
 global ax
 global w
 w=0
@@ -40,8 +40,8 @@ def plotroationbad(k,l1,l2):
         if check:
             tcheck.append(q)
     for q in theta:
-        if np.sin(q) < 1e-7:
-            if np.sin(q) > -1e-7:
+        if np.sin(2*p*q) < 1e-7:
+            if np.sin(2*p*q) > -1e-7:
                 thetacheckdoup.append(q)
     thetacheck = []
     for q in thetacheckdoup:
@@ -53,7 +53,7 @@ def plotroationbad(k,l1,l2):
                 check = False
         if check:
             thetacheck.append(q)
-    print(thetacheck)
+    print(tcheck)
     for i in thetacheck:
         x = []
         y = []
@@ -79,9 +79,9 @@ def plotroationbad(k,l1,l2):
 
 
 def sinsol(t):
-    return np.sin(t)-w
+    return np.sin(2*p*t)-w
 def trefoilx(t):
-    return (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - w)
+    return (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) -4 - w)
 
 
 def trefoil(t, theta):
