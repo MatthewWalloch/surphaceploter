@@ -4,6 +4,8 @@ from scipy.optimize import fsolve
 from sympy import cos, sin, solve, Symbol, Interval, solveset
 
 global ax
+global w
+w=0
 p = np.pi
 ax = plt.figure().add_subplot(projection='3d')
 plt.xlabel("x")
@@ -19,14 +21,10 @@ def plottangle(k,l1,l2):
 def plotroationbad(k,l1,l2):
     #https://www.heldermann-verlag.de/jgg/jgg01_05/jgg0404.pdf
     rotate = []
-    theta = [0, p, 2*p]
-    tfirst = fsolve(trefoilx, np.linspace(0, p, 100))
+    theta = fsolve(sinsol, np.linspace(0, 1, 100))
+    tfirst = fsolve(trefoilx, np.linspace(0, 1, 100))
+    thetacheckdoup = []
     tcheckdoup = []
-    for q in tfirst:
-        if trefoilx(q) < 1e-7:
-            if trefoilx(q) > -1e-7:
-                tcheckdoup.append(q)
-                tfirst = fsolve(trefoilx, np.linspace(p, 2*p, 100))
     for q in tfirst:
         if trefoilx(q) < 1e-7:
             if trefoilx(q) > -1e-7:
@@ -41,7 +39,22 @@ def plotroationbad(k,l1,l2):
                 check = False
         if check:
             tcheck.append(q)
-    for i in theta:
+    for q in theta:
+        if np.sin(q) < 1e-7:
+            if np.sin(q) > -1e-7:
+                thetacheckdoup.append(q)
+    thetacheck = []
+    for q in thetacheckdoup:
+        check = True
+        if q < 0 or q > 2*p:
+            continue
+        for item in thetacheck:
+            if abs(q-item) < 1e-5:
+                check = False
+        if check:
+            thetacheck.append(q)
+    print(thetacheck)
+    for i in thetacheck:
         x = []
         y = []
         z = []
@@ -64,8 +77,11 @@ def plotroationbad(k,l1,l2):
     plt.show()
 
 
+
+def sinsol(t):
+    return np.sin(t)-w
 def trefoilx(t):
-    return (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 1)
+    return (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - w)
 
 
 def trefoil(t, theta):
