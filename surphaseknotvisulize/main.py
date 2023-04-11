@@ -5,7 +5,7 @@ from sympy import cos, sin, solve, Symbol, Interval, solveset
 #need to have sin(sin-1(w0/kx)
 global ax
 global w
-w=-1/4
+w=0
 p = np.pi
 ax = plt.figure().add_subplot(projection='3d')
 plt.xlabel("x")
@@ -77,7 +77,7 @@ def plottangle(k,l1,l2):
 #     plt.show()
 
 
-def plotrotate(k,l1,l2):
+def plotrotate():
     interval = np.linspace(0, 1, 100)
     posx = []
     posy = []
@@ -105,8 +105,10 @@ def plotrotate(k,l1,l2):
                 negx.append(pos[0])
                 negy.append(pos[1])
                 negz.append(pos[2])
-    ax.plot(posx,posy,posz)
-    ax.plot(negx,negy,negz)
+    x = posx + negx
+    y = posy + negy
+    z = posz + negz
+    ax.plot(x,y,z)
     plt.show()
 
 
@@ -118,18 +120,25 @@ def trefoilx(t):
 
 
 def trefoil(t, theta):
-    t = t % 1
     start = 1.0 / 12
     stop = 11.0 / 12
     k0 = (np.cos(4 * p * start) * (2+np.cos(2*p*start))-4, np.sin(4 * p * start) * (2 + np.cos(6 * p * start)), np.sin(6 * p * start), 0)
     k1 = (np.cos(4 * p * stop) * (2+np.cos(2*p*stop))-4, np.sin(4 * p * stop) * (2 + np.cos(6 * p * stop)), np.sin(6 * p * stop), 0)
     if t <=start:
-        return [np.cos(theta) * 12 * k0[0]*t, 12 * k0[0]*t,  k0[2]*12*t+(1-12*t)*-1, np.sin(theta)* 12 * k0[0]*t]
+        return [np.cos(theta) * 12 * k0[0]*t,
+                12 * k0[0]*t+(1-12*t)*-1,
+                k0[2]*12*t,
+                np.sin(theta)* 12 * k0[0]*t]
     elif t >= stop:
-        return [np.cos(theta) *12 * k1[0]*(t-stop), 12 * k1[1]*(t-stop), k1[2]*12 *(t-stop)+(1-12 * t)*1, np.sin(theta)* 12 * k1[0]*(t-stop) ]
+        return [np.cos(theta) *12 * k1[0]*(t-stop),
+                12 * k1[1]*(t-stop)+(1-12 * (t-stop))*1,
+                k1[2]*12 *(t-stop),
+                np.sin(theta)* 12 * k1[0]*(t-stop) ]
     else:
-        return [np.cos(theta) * (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 4), np.sin(4 * p * t) * (2 + np.cos(6 * p * t)),
-         np.sin(6 * p * t), np.sin(theta)* (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 4) ]
+        return [np.cos(theta) * (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 4),
+                np.sin(4 * p * t) * (2 + np.cos(6 * p * t)),
+                np.sin(6 * p * t),
+                np.sin(theta)* (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 4) ]
 
 
 
@@ -140,6 +149,7 @@ t = np.linspace(start,stop, 100)
 t1 = np.linspace(0,1, 100)
 t2 = np.linspace(0,1, 100)
 k = ((np.cos(4*p*t)*(2+np.cos(2*p*t))-4), np.sin(4*p*t)*(2+np.cos(6*p*t)), np.sin(6*p*t), 0)
-r = (k[0][-1]*t1, k[1][-1]*t1, (k[2][-1]*t1+(1-t1)*-1), 0)
-s = (k[0][0]*t1, k[1][0]*t1, (k[2][0]*t1+(1-t1)*1), 0)
-plotrotate(k,r,s)
+r = (k[0][-1]*t1, k[1][-1]*t1+(1-t1)*-1, k[2][-1]*t1, 0)
+s = (k[0][0]*t1, k[1][0]*t1+(1-t1)*1, k[2][0]*t1, 0)
+# plottangle(k,r,s)
+plotrotate()
