@@ -3,7 +3,6 @@ from scipy.spatial import KDTree
 import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objs as go
-import plotly.express as px
 from scipy.optimize import fsolve
 from sympy import cos, sin, solve, Symbol, Interval, solveset
 import pprint
@@ -85,12 +84,14 @@ def plotrotate(w):
             x.append(xline[i] + (1 - q * 1e-1) * (-2 * xline[i]))
             y.append(yline[i])
             z.append(zline[i])
+    xrange = max(x)-min(x)
+    zrange = max(z)-min(z)
     for i in range(1,len(x)):
         distance = {}
         for j in range(len(x)):
-            distance[np.sqrt((newx[n][i-1-placeholder] - x[j]) ** 2 + (newy[n][i-1-placeholder] - y[j]) ** 2 + (newz[n][i-1-placeholder] - z[j]) ** 2)]=(x[j],y[j],z[j])
+            distance[np.sqrt(.9*(newx[n][i-1-placeholder] - x[j]) ** 2 + (newy[n][i-1-placeholder] - y[j]) ** 2 + (newz[n][i-1-placeholder] - z[j]) ** 2)]=(x[j],y[j],z[j])
         key = min(distance.keys())
-        if (key > .1) and (np.absolute(newy[n][i-1-placeholder]-distance[key][1])>.4):
+        if (key > .1*xrange) and (np.absolute(newz[n][i-1-placeholder]-distance[key][2])>.07*zrange):
             n += 1
             placeholder = i
             newx.append([x[0]])
