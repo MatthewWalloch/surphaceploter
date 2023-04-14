@@ -2,12 +2,14 @@ import math
 from scipy.spatial import KDTree
 import numpy as np
 import matplotlib.pyplot as plt
+import plotly.graph_objs as go
+import plotly.express as px
 from scipy.optimize import fsolve
 from sympy import cos, sin, solve, Symbol, Interval, solveset
 import pprint
 global ax
 global w
-w=-3
+w=-2
 p = np.pi
 ax = plt.figure().add_subplot(projection='3d')
 plt.xlabel("x")
@@ -69,28 +71,20 @@ def plotrotate():
         dist = np.sqrt((x[i]-x[i-1])**2+(y[i]-y[i-1])**2+(z[i]-z[i-1])**2)
         if dist > 1:
             if x[i] > 0:
-                print(2)
                 xline.append(x[i])
                 yline.append(y[i])
                 zline.append(z[i])
             if x[i-1] > 0:
-                print(1)
                 xline.append(x[i - 1])
                 yline.append(y[i - 1])
                 zline.append(z[i - 1])
-    pprint.pprint(xline)
-    pprint.pprint(yline)
-    pprint.pprint(zline)
-    # pprint.pprint(x)
-    # pprint.pprint(y)
-    # pprint.pprint(z)
     t = np.arange(0, len(z))
-    #ax.scatter(x, y, z, c=t, cmap=plt.viridis())
-    newx=[x[0]]
-    newy=[y[0]]
-    newz=[z[0]]
+    newx=[[x[0]]]
+    newy=[[y[0]]]
+    newz=[[z[0]]]
     i = 1
-    print(len(x))
+    n = 0
+    placeholder = 0
     for i in range(len(xline)):
         for q in range(0, 10):
             x.append(xline[i] + (1 - q * 1e-1) * (-2 * xline[i]))
@@ -99,64 +93,47 @@ def plotrotate():
     for i in range(1,len(x)):
         distance = {}
         for j in range(len(x)):
-            distance[np.sqrt((newx[i-1] - x[j]) ** 2 + (newy[i-1] - y[j]) ** 2 + (newz[i-1] - z[j]) ** 2)]=(x[j],y[j],z[j])
+            distance[np.sqrt((newx[n][i-1-placeholder] - x[j]) ** 2 + (newy[n][i-1-placeholder] - y[j]) ** 2 + (newz[n][i-1-placeholder] - z[j]) ** 2)]=(x[j],y[j],z[j])
         key = min(distance.keys())
-        newx.append(distance[key][0])
-        newy.append(distance[key][1])
-        newz.append(distance[key][2])
-        x.remove(distance[key][0])
-        y.remove(distance[key][1])
-        z.remove(distance[key][2])
-    # while i < len(x):
-    #     check = True
-    #     print(i)
-    #     for j in range(len(xline)):
-    #         dist = np.sqrt((x[i] - xline[j]) ** 2 + (y[i] - yline[j]) ** 2 + (z[i] - zline[j]) ** 2)
-    #         if dist < (1e-20):
-    #             print(dist)
-    #             for q in range(0,10):
-    #                 newx.append(xline[j] + (1 - q * 1e-1) * (-2 * xline[j]))
-    #                 newy.append(yline[j])
-    #                 newz.append(zline[j])
-    #             check = False
-    #             for q in range(len(x)):
-    #                 print(q, "t")
-    #                 print(newx[-1], newy[-1], newz[-1])
-    #                 dist = np.sqrt((x[q] - newx[-1]) ** 2 + (y[q] - newy[-1]) ** 2 + (z[q] - newz[-1]) ** 2)
-    #                 print(dist)
-    #                 if dist < 1e-1:
-    #                     print(dist)
-    #                     i = j + 1
-    #                     break
-    #     if check:
-    #         newx.append(x[i])
-    #         newy.append(y[i])
-    #         newz.append(z[i])
-    #         i = i + 1
-    # t = np.linspace(0, 1, 10)
-    # templine = []
-    # templine.append((1 - t) * newx[-1] + t * (-1 * newx[-1]))
-    # templine.append(0 * t + newy[-1])
-    # templine.append(0 * t + newz[-1])
-    # for j in range(len(templine)):
-    #     newx.append(templine[0][j])
-    #     newy.append(templine[1][j])
-    #     newz.append(templine[2][j])
-
-    # for i in range(0, len(xline)):
-    #     if x[i] > 0:
-    #         t = np.linspace(0, 1, 10)
-    #         templine = []
-    #         # templine.append((1 - t) * xline[i] + t * (-1 * xline[i]))
-    #         # templine.append(0*t + yline[i])
-    #         # templine.append(0*t + zline[i])
-    #         for j in range(len(templine)):
-    #             x.append(templine[0][j])
-    #             y.append(templine[1][j])
-    #             z.append(templine[2][j])
-    #         #ax.scatter(templine[0], templine[1], templine[2], c='r', alpha=1)
-    ax.plot(newx,newy,newz)
-    plt.show()
+        if (key > .1) and (np.absolute(newy[n][i-1-placeholder]-distance[key][1])>.4):
+            n += 1
+            placeholder = i
+            newx.append([x[0]])
+            newy.append([y[0]])
+            newz.append([z[0]])
+        else:
+            newx[n].append(distance[key][0])
+            newy[n].append(distance[key][1])
+            newz[n].append(distance[key][2])
+            x.remove(distance[key][0])
+            y.remove(distance[key][1])
+            z.remove(distance[key][2])
+    newnewx = []
+    newnewy = []
+    newnewz = []
+    for i in range(len(newx)):
+        newnewx.append([newx[i][0]])
+        newnewy.append([newy[i][0]])
+        newnewz.append([newz[i][0]])
+        for j in range(1, len(newx[i])):
+            newnewx[i].append(newx[i][j])
+            newnewy[i].append(newy[i][j])
+            newnewz[i].append(newz[i][j])
+        newnewx[i].append(newx[i][0])
+        newnewy[i].append(newy[i][0])
+        newnewz[i].append(newz[i][0])
+    #for i in range(len(newx)):
+        #ax.plot(newnewx[i],newnewy[i],newnewz[i])
+    fig = go.Figure(data=go.Scatter3d(x=newnewx[0], y=newnewy[0],z=newnewz[0], mode='lines'))
+    for i in range(1,len(newnewx)):
+        fig.add_trace(go.Scatter3d(x=newnewx[i], y=newnewy[i],z=newnewz[i], mode='lines'))
+    fig.update_traces(
+        line=dict(
+            width=10
+        )
+    )
+    fig.show()
+    #plt.show()
 
 def sinsol(t):
     return np.sin(2*p*t)-w
