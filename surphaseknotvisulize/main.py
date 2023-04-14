@@ -7,23 +7,18 @@ import plotly.express as px
 from scipy.optimize import fsolve
 from sympy import cos, sin, solve, Symbol, Interval, solveset
 import pprint
+import dash
+from dash import html, dcc, Input, Output
 global ax
-global w
-w=-2
 p = np.pi
 ax = plt.figure().add_subplot(projection='3d')
 plt.xlabel("x")
 plt.ylabel("y")
-
-
-def plottangle(k,l1,l2):
-    for i in (k, l1, l2):
-        ax.plot(i[0], i[1], i[2])
-    plt.show()
+app = dash.Dash()
 
 #bridge trisection mayer and zupan
 
-def plotrotate():
+def plotrotate(w):
     interval = np.linspace(0, 1, 500)
     posx = []
     posy = []
@@ -129,14 +124,18 @@ def plotrotate():
         fig.add_trace(go.Scatter3d(x=newnewx[i], y=newnewy[i],z=newnewz[i], mode='lines'))
     fig.update_traces(
         line=dict(
-            width=10
+            width=10,
         )
     )
-    fig.show()
+    fig.update_layout(
+        scene=dict(
+            xaxis=dict(nticks=10, range=[-10, 10], ),
+            yaxis=dict(nticks=10, range=[-10, 10], ),
+            zaxis=dict(nticks=10, range=[-10, 10], ), ),
+        scene_aspectmode='cube',
+        uirevision=False)
+    return fig
     #plt.show()
-
-def sinsol(t):
-    return np.sin(2*p*t)-w
 def trefoilx(t):
     return (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) -4)
 
@@ -144,8 +143,6 @@ def trefoilx(t):
 def trefoil(t, theta):
     start = 1.0 / 12
     stop = 11.0 / 12
-    k0 = (np.cos(4 * p * start) * (2+np.cos(2*p*start))-4, np.sin(4 * p * start) * (2 + np.cos(6 * p * start)), np.sin(6 * p * start), 0)
-    k1 = (np.cos(4 * p * stop) * (2+np.cos(2*p*stop))-4, np.sin(4 * p * stop) * (2 + np.cos(6 * p * stop)), np.sin(6 * p * stop), 0)
     if t <=start:
         return [0,0,0,0]
     elif t >= stop:
@@ -156,14 +153,27 @@ def trefoil(t, theta):
                 np.sin(6 * p * t),
                 np.sin(theta)* (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 4) ]
 
+app.layout = html.Div(id='parent', children=[
+    html.H1(id='H1', children='Visualizing the spun trefoil', style={'textAlign': 'center', \
+                                                                      'marginTop': 40, 'marginBottom': 40}),
 
-start=1.0/12
-stop=11.0/12
-t = np.linspace(start,stop, 100)
-t1 = np.linspace(0,1, 100)
-t2 = np.linspace(0,1, 100)
-k = ((np.cos(4*p*t)*(2+np.cos(2*p*t))-4), np.sin(4*p*t)*(2+np.cos(6*p*t)), np.sin(6*p*t), 0)
-r = (k[0][-1]*t1, k[1][-1]*t1+(1-t1)*-1, k[2][-1]*t1, 0)
-s = (k[0][0]*t1, k[1][0]*t1+(1-t1)*1, k[2][0]*t1, 0)
-# plottangle(k,r,s)
-plotrotate()
+    dcc.Graph(id='knotprojection', figure=plotrotate(0), responsive=True, style={'justify': 'center','width': '80vw', 'height': '80vh'}),
+    html.Div([dcc.Slider(-10, 10, id='waxis', value=0, marks=None)],style= {'transform': 'scale(.8)'}),
+    html.Div(id='updatemode-output-container', style={'textAlign': 'center', \
+                                                                      'marginTop': 40, 'marginBottom': 40})
+])
+@app.callback(Output('updatemode-output-container', 'children'),
+              Input('waxis', 'value'))
+def display_value(value):
+    return 'w axis: {}'.format(value)
+@app.callback(
+    Output('knotprojection', 'figure'),
+    Input('waxis', 'value')
+)
+def update_graph2(slider):
+    fig = plotrotate(slider)
+    return fig
+
+
+if __name__ == '__main__':
+    app.run_server()
