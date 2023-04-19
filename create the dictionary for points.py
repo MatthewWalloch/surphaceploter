@@ -130,7 +130,7 @@ def plotrotate(w):
         newnewy[i].append(newy[i][0])
         newnewz[i].append(newz[i][0])
     # adds the points to the graph
-    return newnewx, newnewy, newnewz
+    return [newnewx], [newnewy], [newnewz]
 
 
 # the x of trefoil parameterization used to determine the invese sin
@@ -154,7 +154,7 @@ def trefoil(t, theta):
 pointdict = {}
 
 for i in range(-100,100,1):
-    pointdict[i]=plotrotate(i/ 10.0)
+    pointdict[i]=[plotrotate(i/ 10.0)]
 file = './plottingspuntrefoil.json'
 with open(file, 'w') as f:
     json.dump(pointdict, f)
