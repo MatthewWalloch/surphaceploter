@@ -10,13 +10,15 @@ import json
 p = np.pi
 app = dash.Dash()
 
+
+
 #bridge trisection mayer and zupan
 file = 'plottingspuntrefoil.json'
 my_dir = os.path.dirname(__file__)
 json_file_path = os.path.join(my_dir, file)
 with open(json_file_path, 'r') as f:
     plotdict = json.load(f)
-def plotpoints():
+def plotall():
     fig = go.Figure(data=go.Scatter3d(x=[], y=[], z=[], mode='lines', showlegend=True))
     for w in plotdict.keys():
         newnewx = plotdict[w][0][0]
@@ -46,11 +48,11 @@ def plotpoints():
 app.layout = html.Div(id='parent', children=[
     html.H1(id='H1', children='Visualizing the spun trefoil', style={'textAlign': 'center', \
                                                                       'marginTop': 40, 'marginBottom': 40}),
-    dcc.Graph(id='knotprojection', figure=plotpoints(), responsive=True, style={'justify': 'center','width': '80vw', 'height': '80vh'}),
+    dcc.Graph(id='knotprojection', figure=plotall(), responsive=True, style={'justify': 'center','width': '80vw', 'height': '80vh'}),
 
 ])
 
 
 
 if __name__ == '__main__':
-    app.run_server()
+    app.run_server(debug=True,port=3004)
