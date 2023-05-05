@@ -153,7 +153,7 @@ def plotrotate(w):
 
 # the x of trefoil parameterization used to determine the invese sin
 def trefoilx(t):
-    return (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) -4)
+    return (np.cos(6 * p * t) * (2 + np.cos(3 * p * t)) -4)
 
 # paramterization of the trefoil between 1/12 and 11/12
 def trefoil(t, theta):
@@ -164,10 +164,10 @@ def trefoil(t, theta):
     elif t >= stop:
         return [0,0,0,0]
     else:
-        return [np.cos(theta) * (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 4),
-                np.sin(4 * p * t) * (2 + np.cos(6 * p * t)),
-                np.sin(6 * p * t),
-                np.sin(theta)* (np.cos(4 * p * t) * (2 + np.cos(2 * p * t)) - 4) ]
+        return [np.cos(theta) * (np.cos(6 * p * t) * (2 + np.cos(3* p * t)) - 4),
+                np.sin(6 * p * t) * (2 + np.cos(10 * p * t)),
+                np.sin(10 * p * t),
+                np.sin(theta)* (np.cos(6 * p * t) * (2 + np.cos(3 * p * t)) - 4) ]
 
 # makes the dash enviorment work with slider and what not
 app.layout = html.Div(id='parent', children=[
