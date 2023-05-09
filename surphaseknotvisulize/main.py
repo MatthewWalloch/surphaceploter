@@ -15,7 +15,7 @@ app = dash.Dash()
 
 def plotrotate(w):
     # we first create a line space enviormnet, ie 100 points evenly spaced on 0,1
-    interval = np.linspace(0, .9999, 500)
+    interval = np.linspace(0, .5, 500)
     # we need a posijtive and a negative version for each as the inverse sin
     posx = []
     posy = []
@@ -31,9 +31,9 @@ def plotrotate(w):
         except:
             continue
         if (w/test) > 0:
-            theta = [arcsin]#, p-arcsin]
+            theta = [arcsin, p-arcsin]
         else:
-            theta = [p-arcsin]#, 2*p+arcsin]
+            theta = [p-arcsin, 2*p+arcsin]
             # evaluate the rotation and seperate into a positve and a negative
         for the in theta:
             pos = trefoil(t, the)
@@ -45,25 +45,124 @@ def plotrotate(w):
                 negx.append(pos[0])
                 negy.append(pos[1])
                 negz.append(pos[2])
-    # these are called bad version as they contain NaN's which is messy
-    badx = posx + negx
-    bady = posy + negy
-    badz = posz + negz
-    x=[]
-    y=[]
-    z=[]
+    # these are called bad version as they contain NaN's which is mes
+    fpx=[]
+    fpy=[]
+    fpz=[]
     #removes NaNs
-    for i in range(len(badx)):
-        if not math.isnan(badx[i]):
-            if not math.isnan(bady[i]):
-                if not math.isnan(badz[i]):
-                    x.append(badx[i])
-                    y.append(bady[i])
-                    z.append(badz[i])
+    for i in range(len(posx)):
+        if not math.isnan(posx[i]):
+            if not math.isnan(posy[i]):
+                if not math.isnan(posz[i]):
+                    fpx.append(posx[i])
+                    fpy.append(posy[i])
+                    fpz.append(posz[i])
+    fnx = []
+    fny = []
+    fnz = []
+    # removes NaNs
+    for i in range(len(negx)):
+        if not math.isnan(negx[i]):
+            if not math.isnan(negy[i]):
+                if not math.isnan(negz[i]):
+                    fnx.append(negx[i])
+                    fny.append(negy[i])
+                    fnz.append(negz[i])
     # recreates lines that attaceh the tangle to the zy axis
     # adds the points to the graph
-    fig = go.Figure(data=go.Scatter3d(x=x, y=y, z=z, mode='lines'))
-    # fig = go.Figure(data=go.Scatter3d(x=x[0], y=newnewy[0],z=newnewz[0], mode='lines'))
+    interval = np.linspace(.5, .9999, 500)
+    # we need a posijtive and a negative version for each as the inverse sin
+    posx = []
+    posy = []
+    posz = []
+    negx = []
+    negy = []
+    negz = []
+    # this goes and checks if there is an inverse sign for each point in the trefoil
+    for t in interval:
+        test = trefoilx(t)
+        try:
+            arcsin = np.arcsin(w / test)
+        except:
+            continue
+        if (w / test) > 0:
+            theta = [arcsin, p - arcsin]
+        else:
+            theta = [p - arcsin, 2 * p + arcsin]
+            # evaluate the rotation and seperate into a positve and a negative
+        for the in theta:
+            pos = trefoil(t, the)
+            if pos[0] > 0:
+                posx.append(pos[0])
+                posy.append(pos[1])
+                posz.append(pos[2])
+            if pos[0] < 0:
+                negx.append(pos[0])
+                negy.append(pos[1])
+                negz.append(pos[2])
+    # these are called bad version as they contain NaN's which is mes
+    spx = []
+    spy = []
+    spz = []
+    # removes NaNs
+    for i in range(len(posx)):
+        if not math.isnan(posx[i]):
+            if not math.isnan(posy[i]):
+                if not math.isnan(posz[i]):
+                    spx.append(posx[i])
+                    spy.append(posy[i])
+                    spz.append(posz[i])
+    snx = []
+    sny = []
+    snz = []
+    # removes NaNs
+    for i in range(len(negx)):
+        if not math.isnan(negx[i]):
+            if not math.isnan(negy[i]):
+                if not math.isnan(negz[i]):
+                    snx.append(negx[i])
+                    sny.append(negy[i])
+                    snz.append(negz[i])
+    # recreates lines that attaceh the tangle to the zy axis
+    # adds the points to the graph
+
+    x = fpx
+    y = fpy
+    z = fpz
+    if (x[-1]-spx[0])**2+(y[-1]-spy[0])**2+(z[-1]-spz[0])**2 <.01:
+        x+= spx
+        x+= snx[::-1]
+        x+= fnx[::-1]
+        y += spy
+        y += sny[::-1]
+        y += fny[::-1]
+        z += spz
+        z += snz[::-1]
+        z += fnz[::-1]
+        x.append(fpx[0])
+        y.append(fpy[0])
+        z.append(fpz[0])
+        fig = go.Figure(data=go.Scatter3d(x=x, y=y, z=z, mode='lines'))
+    else:
+        x += fnx[::-1]
+        y += fny[::-1]
+        z += fnz[::-1]
+        x.append(fpx[0])
+        y.append(fpy[0])
+        z.append(fpz[0])
+        fig = go.Figure(data=go.Scatter3d(x=x, y=y, z=z, mode='lines'))
+        x = spx
+        y = spy
+        z = spz
+        x += snx[::-1]
+        y += sny[::-1]
+        z += snz[::-1]
+        x.append(spx[0])
+        y.append(spy[0])
+        z.append(spz[0])
+        fig.add_trace(go.Scatter3d(x=x, y=y, z=z, mode='lines'))
+
+
     # for i in range(1,len(newnewx)):
     #     fig.add_trace(go.Scatter3d(x=newnewx[i], y=newnewy[i],z=newnewz[i], mode='lines'))
     # makes sure lines look pretty
@@ -132,7 +231,6 @@ def display_value(value):
 def update_graph2(slider):
     fig = plotrotate(slider)
     return fig
-
 
 if __name__ == '__main__':
     app.run_server()
