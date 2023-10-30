@@ -398,7 +398,7 @@ app.layout = html.Div(id='parent', children=[
                                                                           'marginTop': 40, 'marginBottom': 40}),
 
     dcc.Graph(id='knotprojection', figure=plotpoints(0), responsive=True, style={'justify': 'center','width': '80vw', 'height': '80vh'}),
-    html.Div([dcc.Slider(-10, 10, id='waxis', value=0, marks=None, step=.2)],style= {'transform': 'scale(.8)'}),
+    html.Div([dcc.Slider(-10, 10, id='waxis', value=0, marks=None, step=.1)],style= {'transform': 'scale(.8)'}),
     html.Div(id='updatemode-output-container', style={'textAlign': 'center',
                                                                       'marginTop': 40, 'marginBottom': 40})
 ])
