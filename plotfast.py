@@ -319,15 +319,9 @@ def trefoiltangel(t, theta):
 
 def plotall():
     fig = go.Figure(data=go.Scatter3d(x=[], y=[], z=[], mode='lines', showlegend=True))
-    for w in plotdict.keys():
-        newnewx = plotdict[w][0][0]
-        newnewy = plotdict[w][0][1]
-        newnewz = plotdict[w][0][2]
-        if len(newnewx)>0:
-            for i in range(0, len(newnewx[0])):
-
-                fig.add_trace(go.Scatter3d(x=newnewx[0][i], y=newnewy[0][i], z=newnewz[0][i], mode='lines', showlegend=True))
-        # makes sure lines look pretty
+    for i in np.arange(-6,6,.1):
+        fig1 = plotpoints(i)
+        fig = go.Figure(data=fig.data +fig1.data)
     fig.update_traces(
         line=dict(
             width=10
