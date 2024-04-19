@@ -13,7 +13,7 @@ app = dash.Dash()
 
 
 #bridge trisection mayer and zupan
-file = 'plottingspuntrefoil.json'
+file = '..\plottingspuntrefoil.json'
 my_dir = os.path.dirname(__file__)
 json_file_path = os.path.join(my_dir, file)
 with open(json_file_path, 'r') as f:
